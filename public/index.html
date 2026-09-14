@@ -12,6 +12,8 @@
   <!-- ═══ Navbar ═══════════════════════════════════════════ -->
   <nav class="navbar">
     <div class="nav-left">
+      <!-- Mobile filter toggle (hidden on desktop via CSS) -->
+      <button class="btn-icon filter-toggle-btn" id="filterToggleBtn" title="Filters">☰</button>
       <span class="nav-logo">📚</span>
       <div class="nav-brand">
         <span class="nav-title">MCQ Practice</span>
@@ -29,10 +31,20 @@
   <!-- ═══ Layout ════════════════════════════════════════════ -->
   <div class="layout">
 
+    <!-- Sidebar backdrop (mobile only) -->
+    <div class="sidebar-backdrop hidden" id="sidebarBackdrop" onclick="App.closeSidebar()"></div>
+
     <!-- ── Sidebar ── -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Mobile-only header row -->
+      <div class="sidebar-mobile-header">
+        <span style="font-weight:700;font-size:.9rem;">🎯 Filters</span>
+        <button class="btn-icon" onclick="App.closeSidebar()">✕</button>
+      </div>
+
       <div class="sidebar-block">
-        <p class="sidebar-heading">🎯 Filters</p>
+        <p class="sidebar-heading desktop-only">🎯 Filters</p>
         <div class="filter-group">
           <label class="filter-label">Subject</label>
           <select class="filter-select" id="subjectFilter">
@@ -63,7 +75,7 @@
         <div class="filter-count-row">
           <span class="filter-count-badge" id="filterCount">0 questions</span>
         </div>
-        <button class="btn-primary btn-full" id="startQuizBtn">▶ Start Quiz</button>
+        <button class="btn-primary btn-full" id="startQuizBtn" onclick="App.closeSidebar()">▶ Start Quiz</button>
         <button class="btn-ghost btn-full mt-4" id="resetFiltersBtn">↺ Reset Filters</button>
       </div>
 
@@ -101,7 +113,7 @@
 
         <div class="home-hero">
           <h1 class="home-title">Welcome to MCQ Practice 🎯</h1>
-          <p class="home-desc">Pick a subject or category below to jump in, or use the sidebar filters. Choose between <strong>Practice</strong> (save &amp; resume) or <strong>Exam</strong> mode (timed).</p>
+          <p class="home-desc">Pick a subject or category below, or tap <strong>☰</strong> to filter. Choose <strong>Practice</strong> (save &amp; resume) or <strong>Exam</strong> mode (timed).</p>
         </div>
         <h2 class="section-label">Subjects</h2>
         <div class="card-grid" id="subjectGrid"></div>
@@ -122,9 +134,9 @@
             <div class="exam-timer hidden" id="examTimer">
               <span>⏱️</span><span id="timerDisplay">30:00</span>
             </div>
-            <button class="btn-ghost btn-sm hidden" id="saveExitBtn" title="Save progress and exit">💾 Save &amp; Exit</button>
-            <button class="btn-ghost btn-sm hidden" id="mapToggleBtn" title="Toggle question map">🗺 Map</button>
-            <button class="btn-ghost btn-sm" id="exitQuizBtn">✕ Exit</button>
+            <button class="btn-ghost btn-sm hidden" id="saveExitBtn" title="Save &amp; Exit">💾</button>
+            <button class="btn-ghost btn-sm hidden" id="mapToggleBtn" title="Question Map">🗺</button>
+            <button class="btn-ghost btn-sm" id="exitQuizBtn">✕</button>
           </div>
         </div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
@@ -187,19 +199,22 @@
 
     <!-- ─────────────── QUESTION MAP PANEL ──────────────── -->
     <aside class="map-panel hidden" id="mapPanel" onclick="App.closeMapOnBackdrop(event)">
-      <div class="map-header">
-        <h3 class="map-title">🗺 Question Map</h3>
+      <div class="map-panel-inner">
+        <div class="map-header">
+          <h3 class="map-title">🗺 Question Map</h3>
+          <button class="btn-icon map-close-btn" onclick="App.closeMap()">✕</button>
+        </div>
+        <div class="map-legend">
+          <span class="leg-item"><span class="leg-dot ld-current"></span>Current</span>
+          <span class="leg-item"><span class="leg-dot ld-correct"></span>Correct</span>
+          <span class="leg-item"><span class="leg-dot ld-wrong"></span>Wrong</span>
+          <span class="leg-item"><span class="leg-dot ld-exam-ans"></span>Answered</span>
+          <span class="leg-item"><span class="leg-dot ld-review"></span>For Review</span>
+          <span class="leg-item"><span class="leg-dot ld-none"></span>Not Visited</span>
+        </div>
+        <div class="map-grid-wrap" id="mapGrid"></div>
+        <div class="map-summary" id="mapSummary"></div>
       </div>
-      <div class="map-legend">
-        <span class="leg-item"><span class="leg-dot ld-current"></span>Current</span>
-        <span class="leg-item"><span class="leg-dot ld-correct"></span>Correct</span>
-        <span class="leg-item"><span class="leg-dot ld-wrong"></span>Wrong</span>
-        <span class="leg-item"><span class="leg-dot ld-exam-ans"></span>Answered</span>
-        <span class="leg-item"><span class="leg-dot ld-review"></span>For Review</span>
-        <span class="leg-item"><span class="leg-dot ld-none"></span>Not Visited</span>
-      </div>
-      <div class="map-grid-wrap" id="mapGrid"></div>
-      <div class="map-summary" id="mapSummary"></div>
     </aside>
 
   </div><!-- /layout -->

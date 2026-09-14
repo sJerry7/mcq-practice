@@ -367,6 +367,10 @@ const App = {
     this.$('navScore').classList.remove('hidden');
     this.$('sessionStats').classList.remove('hidden');
     this.$('homeResume').classList.add('hidden');
+    // Show map toggle button on mobile (on desktop the panel is always visible)
+    if (window.innerWidth <= 768) {
+      this.$('mapToggleBtn').classList.remove('hidden');
+    }
     this.showScreen('quizScreen');
     this.renderQuestion();
     this.openMap();   // always show map when quiz starts
@@ -709,7 +713,20 @@ const App = {
   },
 
   /* ================================================================
-     QUESTION MAP  — permanent right panel during quiz
+     SIDEBAR  (mobile slide-in drawer)
+     ================================================================ */
+  toggleSidebar() {
+    const open = this.$('sidebar').classList.toggle('mobile-open');
+    this.$('sidebarBackdrop').classList.toggle('hidden', !open);
+  },
+
+  closeSidebar() {
+    this.$('sidebar').classList.remove('mobile-open');
+    this.$('sidebarBackdrop').classList.add('hidden');
+  },
+
+  /* ================================================================
+     QUESTION MAP  — permanent right panel on desktop, overlay on mobile
      ================================================================ */
   openMap() {
     this.state.mapOpen = true;
@@ -723,7 +740,8 @@ const App = {
   },
 
   closeMapOnBackdrop(e) {
-    // Mobile only: tap the backdrop area outside the inner box
+    // On mobile the map is a full-screen overlay — clicking the dark backdrop
+    // (outside the inner panel box) closes it
     if (window.innerWidth <= 768 && e.target === this.$('mapPanel')) this.closeMap();
   },
 
@@ -878,6 +896,8 @@ const App = {
   resetToHome(keepSession = false) {
     this.stopTimer();
     this.closeMap();
+    this.closeSidebar();
+    this.$('mapToggleBtn').classList.add('hidden');
     this.$('navScore').classList.add('hidden');
     this.$('reviewPanel').classList.add('hidden');
     this.$('examTimer').classList.add('hidden');
@@ -901,6 +921,7 @@ const App = {
      ================================================================ */
   bindEvents() {
     this.$('darkModeBtn').onclick     = () => this.toggleDarkMode();
+    this.$('filterToggleBtn').onclick = () => this.toggleSidebar();
     this.$('startQuizBtn').onclick    = () => this.openModeModal();
     this.$('resetFiltersBtn').onclick = () => {
       this.$('subjectFilter').value    = 'all';
