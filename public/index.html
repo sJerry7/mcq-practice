@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCQ Practice</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+</head>
+<body>
+
+  <!-- ═══ Navbar ═══════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="nav-logo">📚</span>
+      <div class="nav-brand">
+        <span class="nav-title">MCQ Practice</span>
+        <span class="nav-sub">Learn · Practice · Excel</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-score hidden" id="navScore">
+        Score: <strong id="navScoreVal">0/0</strong>
+      </span>
+      <button class="btn-icon" id="darkModeBtn" title="Toggle dark mode">🌙</button>
+    </div>
+  </nav>
+
+  <!-- ═══ Layout ════════════════════════════════════════════ -->
+  <div class="layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-block">
+        <p class="sidebar-heading">🎯 Filters</p>
+        <div class="filter-group">
+          <label class="filter-label">Subject</label>
+          <select class="filter-select" id="subjectFilter">
+            <option value="all">All Subjects</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Category</label>
+          <select class="filter-select" id="categoryFilter">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Topic</label>
+          <select class="filter-select" id="topicFilter">
+            <option value="all">All Topics</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Difficulty</label>
+          <select class="filter-select" id="difficultyFilter">
+            <option value="all">All Levels</option>
+            <option value="easy">🟢 Easy</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="hard">🔴 Hard</option>
+          </select>
+        </div>
+        <div class="filter-count-row">
+          <span class="filter-count-badge" id="filterCount">0 questions</span>
+        </div>
+        <button class="btn-primary btn-full" id="startQuizBtn">▶ Start Quiz</button>
+        <button class="btn-ghost btn-full mt-4" id="resetFiltersBtn">↺ Reset Filters</button>
+      </div>
+
+      <!-- Live session stats -->
+      <div class="sidebar-block hidden" id="sessionStats">
+        <p class="sidebar-heading">📊 Session</p>
+        <div class="stat-row"><span>Answered</span><strong id="statAnswered">0</strong></div>
+        <div class="stat-row"><span class="c-success">Correct</span><strong class="c-success" id="statCorrect">0</strong></div>
+        <div class="stat-row"><span class="c-error">Wrong</span><strong class="c-error" id="statWrong">0</strong></div>
+        <div class="stat-row"><span>For Review</span><strong class="c-review" id="statReview">0</strong></div>
+        <div class="stat-row"><span>Accuracy</span><strong id="statAccuracy">—</strong></div>
+      </div>
+    </aside>
+
+    <!-- ── Main content ── -->
+    <main class="main">
+
+      <!-- ─────────────── HOME SCREEN ─────────────────── -->
+      <div class="screen" id="homeScreen">
+
+        <!-- Resume saved session banner -->
+        <div class="home-resume hidden" id="homeResume">
+          <div class="home-resume-inner">
+            <span class="hr-icon">💾</span>
+            <div class="hr-info">
+              <strong>Saved session found</strong>
+              <span id="homeResumeInfo"></span>
+            </div>
+            <div class="hr-btns">
+              <button class="btn-primary btn-sm" id="homeResumeBtn">Resume</button>
+              <button class="btn-ghost btn-sm" id="homeDiscardBtn">Discard</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-hero">
+          <h1 class="home-title">Welcome to MCQ Practice 🎯</h1>
+          <p class="home-desc">Pick a subject or category below to jump in, or use the sidebar filters. Choose between <strong>Practice</strong> (save &amp; resume) or <strong>Exam</strong> mode (timed).</p>
+        </div>
+        <h2 class="section-label">Subjects</h2>
+        <div class="card-grid" id="subjectGrid"></div>
+        <h2 class="section-label mt-20">Categories</h2>
+        <div class="card-grid" id="categoryGrid"></div>
+      </div>
+
+      <!-- ─────────────── QUIZ SCREEN ──────────────────── -->
+      <div class="screen hidden" id="quizScreen">
+
+        <!-- Topbar -->
+        <div class="quiz-topbar">
+          <div class="topbar-left">
+            <span class="q-counter">Q <span id="qCurrent">1</span> / <span id="qTotal">10</span></span>
+            <span class="mode-badge" id="modeBadge"></span>
+          </div>
+          <div class="topbar-right">
+            <div class="exam-timer hidden" id="examTimer">
+              <span>⏱️</span><span id="timerDisplay">30:00</span>
+            </div>
+            <button class="btn-ghost btn-sm hidden" id="saveExitBtn" title="Save progress and exit">💾 Save &amp; Exit</button>
+            <button class="btn-ghost btn-sm hidden" id="mapToggleBtn" title="Toggle question map">🗺 Map</button>
+            <button class="btn-ghost btn-sm" id="exitQuizBtn">✕ Exit</button>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+        <!-- Question card -->
+        <div class="q-card">
+          <div class="q-meta">
+            <div class="q-tags" id="qTags"></div>
+            <div class="review-flag hidden" id="reviewFlag">🚩 Marked for Review</div>
+          </div>
+          <p class="q-text" id="qText"></p>
+          <pre class="code-block" id="codeBlock" style="display:none"><code id="codeContent"></code></pre>
+          <div class="options-list" id="optionsList"></div>
+
+          <!-- Explanation — practice mode only -->
+          <div class="exp-box hidden" id="expBox">
+            <div class="exp-header" id="expHeader"></div>
+            <div class="exp-body" id="expBody"></div>
+          </div>
+        </div>
+
+        <!-- Footer navigation -->
+        <div class="quiz-footer">
+          <button class="btn-ghost" id="prevBtn">← Prev</button>
+          <button class="btn-review" id="markReviewBtn">🏳 Review</button>
+          <div class="footer-right">
+            <button class="btn-ghost" id="skipBtn">Skip</button>
+            <button class="btn-primary hidden" id="nextBtn">Next →</button>
+            <button class="btn-success hidden" id="finishBtn">Finish 🏁</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────── RESULTS SCREEN ───────────────── -->
+      <div class="screen hidden" id="resultsScreen">
+        <div class="results-card">
+          <div class="results-emoji" id="resultsEmoji">🎉</div>
+          <h2 class="results-title">Quiz Complete!</h2>
+          <div class="results-big">
+            <span id="rScore">0</span><span class="score-slash">/</span><span id="rTotal">0</span>
+          </div>
+          <p class="results-pct" id="resultsPct">0% Accuracy</p>
+          <div class="results-breakdown">
+            <div class="rb correct"><div class="rb-num" id="rbCorrect">0</div><div class="rb-lbl">Correct</div></div>
+            <div class="rb wrong"><div class="rb-num" id="rbWrong">0</div><div class="rb-lbl">Wrong</div></div>
+            <div class="rb skipped"><div class="rb-num" id="rbSkipped">0</div><div class="rb-lbl">Skipped</div></div>
+          </div>
+          <div class="results-btns">
+            <button class="btn-primary" id="reviewAnswersBtn">📋 Review Answers</button>
+            <button class="btn-ghost" id="newQuizBtn">↺ New Quiz</button>
+          </div>
+        </div>
+        <div class="review-panel hidden" id="reviewPanel">
+          <h3 class="review-title">Answer Review</h3>
+          <div id="reviewItems"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ─────────────── QUESTION MAP PANEL ──────────────── -->
+    <aside class="map-panel hidden" id="mapPanel" onclick="App.closeMapOnBackdrop(event)">
+      <div class="map-header">
+        <h3 class="map-title">🗺 Question Map</h3>
+      </div>
+      <div class="map-legend">
+        <span class="leg-item"><span class="leg-dot ld-current"></span>Current</span>
+        <span class="leg-item"><span class="leg-dot ld-correct"></span>Correct</span>
+        <span class="leg-item"><span class="leg-dot ld-wrong"></span>Wrong</span>
+        <span class="leg-item"><span class="leg-dot ld-exam-ans"></span>Answered</span>
+        <span class="leg-item"><span class="leg-dot ld-review"></span>For Review</span>
+        <span class="leg-item"><span class="leg-dot ld-none"></span>Not Visited</span>
+      </div>
+      <div class="map-grid-wrap" id="mapGrid"></div>
+      <div class="map-summary" id="mapSummary"></div>
+    </aside>
+
+  </div><!-- /layout -->
+
+  <!-- ═══ Mode Selection Modal ═════════════════════════════ -->
+  <div class="modal-overlay hidden" id="modeModal">
+    <div class="modal-box">
+      <h2 class="modal-title">Choose your mode</h2>
+
+      <div class="mode-grid">
+        <div class="mode-card" id="modeCardPractice" onclick="App.selectMode('practice')">
+          <div class="mode-icon">📖</div>
+          <div class="mode-name">Practice Mode</div>
+          <ul class="mode-features">
+            <li>No time limit</li>
+            <li>Instant answer feedback</li>
+            <li>Save session &amp; resume later</li>
+            <li>Mark questions for review</li>
+          </ul>
+        </div>
+        <div class="mode-card" id="modeCardExam" onclick="App.selectMode('exam')">
+          <div class="mode-icon">⏱️</div>
+          <div class="mode-name">Exam Mode</div>
+          <ul class="mode-features">
+            <li>Set your own countdown timer</li>
+            <li>No feedback during quiz</li>
+            <li>Simulates real exam feel</li>
+            <li>Full review after submission</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Exam duration picker -->
+      <div class="exam-dur-row hidden" id="examDurationRow">
+        <span class="dur-label">⏱ Timer Duration</span>
+        <div class="dur-controls">
+          <button class="dur-btn" onclick="App.adjustDuration(-10)">−10m</button>
+          <button class="dur-btn" onclick="App.adjustDuration(-5)">−5m</button>
+          <button class="dur-btn" onclick="App.adjustDuration(-1)">−1m</button>
+          <span class="dur-display"><span id="durationDisplay">30</span> min</span>
+          <button class="dur-btn" onclick="App.adjustDuration(1)">+1m</button>
+          <button class="dur-btn" onclick="App.adjustDuration(5)">+5m</button>
+          <button class="dur-btn" onclick="App.adjustDuration(10)">+10m</button>
+        </div>
+      </div>
+
+      <!-- Resume saved session (shown only if one exists) -->
+      <div class="resume-banner hidden" id="resumeBanner">
+        <span class="resume-icon">💾</span>
+        <div class="resume-info">
+          <div class="resume-title">Saved practice session found</div>
+          <div class="resume-meta" id="resumeMeta"></div>
+        </div>
+        <button class="btn-primary btn-sm" onclick="App.resumeFromModal()">Resume</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="App.closeModeModal()">Cancel</button>
+        <button class="btn-primary" id="startModeBtn" disabled onclick="App.confirmAndStart()">Start Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

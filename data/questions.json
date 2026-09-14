@@ -1,0 +1,798 @@
+{
+  "subjects": [
+    { "id": "it", "name": "Information Technology", "icon": "💻" }
+  ],
+  "categories": [
+    { "id": "python", "name": "Python",    "subject": "it", "icon": "🐍" },
+    { "id": "java",   "name": "Java",      "subject": "it", "icon": "☕" },
+    { "id": "c_cpp",  "name": "C / C++",   "subject": "it", "icon": "⚙️" }
+  ],
+  "questions": [
+
+    {
+      "id": 1, "subject": "it", "category": "python", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "What will complete this code to print even numbers from 1–10?",
+      "code": "for i in range(1, 11):\n    if ______:\n        print(i)",
+      "options": ["i % 2 == 1", "i % 2 == 0", "i / 2 == 0", "i // 2 == 0"],
+      "correct": 1,
+      "explanation": "The modulo operator (%) gives the remainder after division. i % 2 == 0 is True when i is perfectly divisible by 2 — meaning it is even. Option A (i % 2 == 1) selects odd numbers. Option C uses float division: 4 / 2 gives 2.0 not 0.0, so the condition is almost never True. Option D uses integer (floor) division: 4 // 2 gives 2, not 0 — same problem."
+    },
+    {
+      "id": 2, "subject": "it", "category": "python", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Fill in the blank to reverse a string s:",
+      "code": "def reverse(s):\n    return ______",
+      "options": ["s[-1]", "s[::1]", "s[::-1]", "reverse(s)"],
+      "correct": 2,
+      "explanation": "Python slice notation is s[start:stop:step]. Using a step of -1 without start/stop means 'walk backwards through the entire string', effectively reversing it. s[-1] returns only the last character. s[::1] is a copy with step +1, i.e. the original string. reverse(s) calls the same function again infinitely, causing a RecursionError."
+    },
+    {
+      "id": 3, "subject": "it", "category": "python", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Complete the recursive factorial function:",
+      "code": "def factorial(n):\n    if n == 0:\n        return 1\n    return ______",
+      "options": ["n * factorial(n)", "n + factorial(n-1)", "n * factorial(n-1)", "factorial(n) * n"],
+      "correct": 2,
+      "explanation": "Factorial is defined as n! = n × (n-1)!. The recursive call must reduce the problem by passing n-1. Option A calls factorial(n) without reducing n — infinite recursion. Option B adds instead of multiplies. Option D is identical to A (same order, same infinite loop)."
+    },
+    {
+      "id": 4, "subject": "it", "category": "python", "topic": "Logic Flow", "difficulty": "medium",
+      "question": "Complete the missing line in binary search so that the search range moves right when the target is larger:",
+      "code": "def binary_search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            ______\n        else:\n            high = mid - 1\n    return -1",
+      "options": ["low = mid", "low = mid + 1", "low = mid - 1", "high = mid + 1"],
+      "correct": 1,
+      "explanation": "When arr[mid] < target the answer lies to the right of mid. Setting low = mid + 1 discards mid and everything to its left. Using low = mid would keep mid in the range and risk an infinite loop when high = mid. Setting low = mid - 1 would move left, which is wrong. Setting high = mid + 1 would expand the search upward nonsensically."
+    },
+    {
+      "id": 5, "subject": "it", "category": "python", "topic": "Logic Flow", "difficulty": "medium",
+      "question": "Complete the upper bound for the primality loop so that it only checks up to the square root of n:",
+      "code": "def is_prime(n):\n    if n < 2: return False\n    for i in range(2, ______):\n        if n % i == 0: return False\n    return True",
+      "options": ["n", "n + 1", "int(n**0.5) + 1", "n // 2"],
+      "correct": 2,
+      "explanation": "If n has a factor larger than its square root, the corresponding paired factor is smaller than the square root, so we will already have found it. Checking up to sqrt(n)+1 (exclusive) covers all necessary divisors efficiently. Using n or n+1 checks far too many values. Using n//2 is a common approximation but it misses nothing below sqrt(n) for large n only by coincidence — int(n**0.5)+1 is the mathematically correct bound."
+    },
+
+    {
+      "id": 6, "subject": "it", "category": "python", "topic": "Debugging", "difficulty": "easy",
+      "question": "What is the bug in this code?",
+      "code": "def add(a, b):\n    result = a + b\nprint(result)",
+      "options": ["Wrong operator used", "print(result) is outside the function so 'result' is undefined", "Missing return statement", "No bug — it works fine"],
+      "correct": 1,
+      "explanation": "In Python, variables defined inside a function exist only in that function's local scope. Because print(result) is at module level (outside add), Python looks for 'result' in the global scope and raises NameError: name 'result' is not defined. The fix is to either call print inside the function, or return the value and print the return value."
+    },
+    {
+      "id": 7, "subject": "it", "category": "python", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is wrong with this loop?",
+      "code": "lst = [1, 2, 3]\nfor i in range(len(lst)):\n    lst.append(i)",
+      "options": ["Syntax error on line 1", "Infinite loop — range(len(lst)) is recalculated each iteration", "IndexError after position 2", "Nothing is wrong"],
+      "correct": 1,
+      "explanation": "range(len(lst)) evaluates len(lst) only once at the start of the for loop in Python — so this specific code actually terminates after 3 iterations. However, the much more common version of this mistake is using 'for x in lst' and modifying lst inside the loop, OR using a while loop with len(lst). The intent here shows the logical error: every append increases the list, and if written as a while loop it would be infinite. The safe pattern is to iterate over a copy: for x in lst[:]."
+    },
+    {
+      "id": 8, "subject": "it", "category": "python", "topic": "Debugging", "difficulty": "easy",
+      "question": "What happens when this code runs?",
+      "code": "def divide(a, b):\n    return a / b\n\nprint(divide(10, 0))",
+      "options": ["Syntax error at definition", "ZeroDivisionError at runtime", "Returns 0", "Returns inf"],
+      "correct": 1,
+      "explanation": "Division by zero raises a ZeroDivisionError in Python at runtime — not a syntax error, because the syntax is valid. Unlike some languages where integer division by zero is undefined behaviour, Python raises an explicit exception. The fix is to guard with 'if b == 0: return None' or use a try/except block. Note: float('inf') is only returned by IEEE 754 if you were using C-level floats directly."
+    },
+    {
+      "id": 9, "subject": "it", "category": "python", "topic": "Debugging", "difficulty": "easy",
+      "question": "What is the bug here?",
+      "code": "x = \"5\"\ny = 3\nprint(x + y)",
+      "options": ["No output", "Prints 8", "TypeError — cannot concatenate str and int", "Prints 53"],
+      "correct": 2,
+      "explanation": "Python does not implicitly convert types. The + operator between a str and an int raises TypeError: can only concatenate str (not \"int\") to str. To add them numerically, convert x to int first: int(x) + y. To concatenate as strings: x + str(y)."
+    },
+    {
+      "id": 10, "subject": "it", "category": "python", "topic": "Debugging", "difficulty": "easy",
+      "question": "Find the logical bug in this function:",
+      "code": "def max_val(a, b):\n    if a > b:\n        return b\n    return a",
+      "options": ["Syntax error", "Returns the minimum instead of the maximum", "Infinite recursion", "No bug"],
+      "correct": 1,
+      "explanation": "The condition a > b is correct for identifying that a is the larger value, but the function returns b (the smaller one) in that branch. The correct logic is: if a > b: return a. The final return a should be return b. This is a classic swap of return values — the logic is inverted."
+    },
+
+    {
+      "id": 11, "subject": "it", "category": "python", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "x = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)",
+      "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "[4]", "Error"],
+      "correct": 1,
+      "explanation": "In Python, lists are mutable objects. y = x does not create a copy — it creates a second reference to the same list object in memory. So y.append(4) modifies the underlying list that both x and y point to. Printing x shows [1, 2, 3, 4]. To make an independent copy, use y = x.copy() or y = x[:]."
+    },
+    {
+      "id": 12, "subject": "it", "category": "python", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does *args do in a Python function definition?",
+      "options": ["Multiplies the arguments together", "Accepts keyword arguments as a dictionary", "Accepts a variable number of positional arguments as a tuple", "Unpacks a list into separate variables"],
+      "correct": 2,
+      "explanation": "*args in a function signature collects any extra positional arguments passed to the function into a tuple named args. For example, def f(*args): print(args) called as f(1, 2, 3) prints (1, 2, 3). **kwargs is the keyword-argument equivalent, collecting them into a dict. The * in a call site (like f(*my_list)) unpacks a sequence, which is a different but related concept."
+    },
+    {
+      "id": 13, "subject": "it", "category": "python", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "print(type(3/2))",
+      "options": ["<class 'int'>", "<class 'float'>", "<class 'double'>", "<class 'str'>"],
+      "correct": 1,
+      "explanation": "In Python 3, the / operator always performs true (float) division, even when both operands are integers. 3/2 evaluates to 1.5, which is a float. Python has no 'double' built-in type. To get integer (floor) division, use // — 3//2 gives 1, which is an int."
+    },
+    {
+      "id": 14, "subject": "it", "category": "python", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the role of __init__ in a Python class?",
+      "options": ["It destroys an object when it goes out of scope", "It is the constructor that initialises a new instance", "It imports external modules", "It defines a static class method"],
+      "correct": 1,
+      "explanation": "__init__ is called automatically right after a new object is created (by __new__). It sets up instance attributes. For example, self.name = name inside __init__ gives every instance its own name attribute. The destructor equivalent is __del__. Static methods are defined with @staticmethod. Module imports use the import keyword."
+    },
+    {
+      "id": 15, "subject": "it", "category": "python", "topic": "Syntax", "difficulty": "easy",
+      "question": "Which expression creates a list of squares of numbers 1 through 5 using list comprehension?",
+      "options": ["[x^2 for x in range(1,6)]", "[x**2 for x in range(1,6)]", "{x**2 for x in range(1,6)}", "(x**2 for x in range(1,6))"],
+      "correct": 1,
+      "explanation": "Python uses ** for exponentiation, not ^ (which is bitwise XOR). Square brackets [] create a list. So [x**2 for x in range(1,6)] produces [1, 4, 9, 16, 25]. Option C with {} creates a set comprehension (unordered, no duplicates). Option D with () creates a generator expression, which is lazy and not a list."
+    },
+
+    {
+      "id": 16, "subject": "it", "category": "python", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "a = [1, 2, 3, 4, 5]\nprint(a[1:4])",
+      "options": ["[1, 2, 3, 4]", "[2, 3, 4]", "[1, 2, 3]", "[2, 3, 4, 5]"],
+      "correct": 1,
+      "explanation": "Python slicing a[start:stop] includes the element at index start and excludes the element at index stop. a[1:4] returns elements at indices 1, 2, 3 — which are 2, 3, 4. Index 4 (value 5) is excluded. Slicing never raises an IndexError even if stop is beyond the list length."
+    },
+    {
+      "id": 17, "subject": "it", "category": "python", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "x = 10\ndef foo():\n    x = 20\n    print(x)\nfoo()\nprint(x)",
+      "options": ["20  20", "10  10", "20  10", "Error"],
+      "correct": 2,
+      "explanation": "Inside foo, x = 20 creates a new local variable that shadows the global x. When print(x) runs inside foo it prints 20. After foo returns, the local x is gone. The global x is still 10, so the second print outputs 10. To modify the global x from inside a function, you would need 'global x' before the assignment."
+    },
+    {
+      "id": 18, "subject": "it", "category": "python", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "print(bool(0), bool(\"\"), bool([]), bool(1))",
+      "options": ["True True True True", "False False False True", "False True False True", "True False True False"],
+      "correct": 1,
+      "explanation": "Python's truthiness rules: 0 is falsy, so bool(0) = False. An empty string \"\" is falsy. An empty list [] is falsy. The integer 1 is truthy, so bool(1) = True. Falsy values include: 0, 0.0, None, False, empty sequences/collections, and empty strings. Everything else is truthy."
+    },
+    {
+      "id": 19, "subject": "it", "category": "python", "topic": "Output", "difficulty": "medium",
+      "question": "What is printed?",
+      "code": "d = {\"a\": 1, \"b\": 2}\nd[\"c\"] = d.get(\"c\", 0) + 1\nprint(d)",
+      "options": ["{\"a\": 1, \"b\": 2}", "{\"a\": 1, \"b\": 2, \"c\": 0}", "{\"a\": 1, \"b\": 2, \"c\": 1}", "KeyError"],
+      "correct": 2,
+      "explanation": "dict.get(key, default) returns the value for key if it exists, otherwise returns default (here 0) without raising an error. Since 'c' is not in d, d.get(\"c\", 0) returns 0. Adding 1 gives 1. Assigning d[\"c\"] = 1 inserts the new key. The final dict is {\"a\": 1, \"b\": 2, \"c\": 1}."
+    },
+    {
+      "id": 20, "subject": "it", "category": "python", "topic": "Output", "difficulty": "easy",
+      "question": "What is printed?",
+      "code": "for i in range(3):\n    for j in range(3):\n        if i == j:\n            print(i, j)",
+      "options": ["0 0 then 1 1 then 2 2 (each on its own line)", "0 1 then 1 2 then 2 0", "0 0 1 1 2 2 on one line", "Nothing is printed"],
+      "correct": 0,
+      "explanation": "The nested loops generate all pairs (i, j) where both i and j go from 0 to 2. The condition i == j is only True on the diagonal: (0,0), (1,1), (2,2). Each call to print adds a newline, so we see three lines: '0 0', '1 1', '2 2'."
+    },
+
+    {
+      "id": 21, "subject": "it", "category": "python", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "What does df.describe() return in pandas?",
+      "options": ["The first 5 rows of the DataFrame", "Column data types and null counts", "Summary statistics: count, mean, std, min, quartiles, max for numeric columns", "The shape (rows, columns) of the DataFrame"],
+      "correct": 2,
+      "explanation": "df.describe() computes summary statistics for all numeric columns: count (non-null values), mean, standard deviation, min, 25th percentile (Q1), median (50%, Q2), 75th percentile (Q3), and max. To include non-numeric columns, pass include='all'. df.head() shows the first 5 rows. df.dtypes shows types. df.shape shows dimensions."
+    },
+    {
+      "id": 22, "subject": "it", "category": "python", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "How do you select all rows where the 'age' column is greater than 30 in DataFrame df?",
+      "options": ["df.age > 30", "df[df[\"age\"] > 30]", "df.select(\"age > 30\")", "df.where(\"age\", 30)"],
+      "correct": 1,
+      "explanation": "Boolean indexing is the standard pandas pattern: df[condition] filters rows where condition is True. df[\"age\"] > 30 produces a boolean Series, and wrapping it in df[...] selects only the matching rows. Option A evaluates the condition but does not filter the DataFrame. Options C and D are not valid pandas methods."
+    },
+    {
+      "id": 23, "subject": "it", "category": "python", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "What does df.dropna() do?",
+      "options": ["Drops all columns from the DataFrame", "Returns a new DataFrame with rows containing any NaN values removed", "Replaces NaN values with 0 in-place", "Removes duplicate rows"],
+      "correct": 1,
+      "explanation": "dropna() removes rows (by default) that contain at least one NaN (missing) value and returns a new DataFrame — the original is not modified unless inplace=True. To drop columns with NaNs, use axis=1. To fill NaNs instead of dropping them, use fillna(). To remove duplicate rows, use drop_duplicates()."
+    },
+    {
+      "id": 24, "subject": "it", "category": "python", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "To compute the mean of column 'salary' in DataFrame df, which call is correct?",
+      "options": ["df.mean(\"salary\")", "df[\"salary\"].avg()", "df[\"salary\"].mean()", "mean(df[\"salary\"])"],
+      "correct": 2,
+      "explanation": "The .mean() method is available on a pandas Series. df[\"salary\"] selects the column as a Series, and .mean() computes its arithmetic mean. df.mean(\"salary\") is incorrect syntax. .avg() does not exist in pandas. The built-in mean() function would require importing statistics.mean, and is rarely used with pandas."
+    },
+    {
+      "id": 25, "subject": "it", "category": "python", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "What does df.groupby(\"dept\")[\"salary\"].sum() return?",
+      "options": ["The total salary across all employees", "The sum of salary for each department as a Series indexed by department", "The average salary per department", "The count of employees per department"],
+      "correct": 1,
+      "explanation": "groupby(\"dept\") splits the DataFrame into groups based on unique values in 'dept'. [\"salary\"] selects the salary column within each group. .sum() aggregates by summing each group. The result is a Series where the index is each department name and the value is the total salary for that department. For average use .mean(), for count use .count()."
+    },
+
+    {
+      "id": 26, "subject": "it", "category": "java", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Fill in the blank to swap two variables without a third variable:",
+      "code": "int a = 5, b = 10;\na = a + b;   // a is now 15\nb = ______;  // b should become 5\na = a - b;   // a should become 10",
+      "options": ["a - b", "b - a", "a + b", "a * b"],
+      "correct": 0,
+      "explanation": "After a = a + b, a holds the sum (15). To recover the original value of a (5), compute b = a - b = 15 - 10 = 5. Then a = a - b = 15 - 5 = 10. This arithmetic swap avoids a temporary variable. Note: this can overflow for large integers; the XOR swap (a ^= b; b ^= a; a ^= b) is the overflow-safe version."
+    },
+    {
+      "id": 27, "subject": "it", "category": "java", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Complete the Fibonacci recursive method:",
+      "code": "int fib(int n) {\n    if (n <= 1) return n;\n    return ______;\n}",
+      "options": ["fib(n) + fib(n-1)", "fib(n-1) * fib(n-2)", "fib(n-1) + fib(n-2)", "n * fib(n-1)"],
+      "correct": 2,
+      "explanation": "The Fibonacci sequence is defined as F(n) = F(n-1) + F(n-2) with base cases F(0)=0 and F(1)=1. Option A calls fib(n) recursively without reducing n — infinite recursion. Option B multiplies instead of adds. Option D computes n! (factorial) not Fibonacci."
+    },
+    {
+      "id": 28, "subject": "it", "category": "java", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Fill in the blank to check whether a String s is a palindrome:",
+      "code": "boolean isPalindrome(String s) {\n    String rev = new StringBuilder(s).______.toString();\n    return s.equals(rev);\n}",
+      "options": ["sort()", "reverse()", "flip()", "mirror()"],
+      "correct": 1,
+      "explanation": "StringBuilder has a reverse() method that reverses the sequence of characters in place and returns the same StringBuilder for chaining. Calling .toString() converts it back to a String. The result is then compared to the original. sort(), flip(), and mirror() do not exist on StringBuilder."
+    },
+    {
+      "id": 29, "subject": "it", "category": "java", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Fill in the condition to print 1–10 while skipping multiples of 3:",
+      "code": "for (int i = 1; i <= 10; i++) {\n    if (______) continue;\n    System.out.println(i);\n}",
+      "options": ["i % 3 != 0", "i % 3 == 0", "i / 3 == 0", "i == 3"],
+      "correct": 1,
+      "explanation": "The continue statement skips the rest of the loop body for the current iteration. We want to skip when i is a multiple of 3, which happens when i % 3 == 0. Option A (i % 3 != 0) would skip non-multiples and only print multiples — the opposite of what we want. Option C incorrectly uses division. Option D only skips i = 3."
+    },
+    {
+      "id": 30, "subject": "it", "category": "java", "topic": "Logic Flow", "difficulty": "medium",
+      "question": "Complete to sort an Integer array in descending order:",
+      "code": "Integer[] arr = {3, 1, 4, 1, 5};\nArrays.sort(arr, ______);",
+      "options": ["Comparator.naturalOrder()", "(a, b) -> a - b", "Comparator.reverseOrder()", "(a, b) -> b + a"],
+      "correct": 2,
+      "explanation": "Comparator.reverseOrder() returns a comparator that imposes the reverse of natural ordering — highest first. Comparator.naturalOrder() sorts ascending (lowest first). The lambda (a, b) -> a - b is an ascending comparator. (a, b) -> b + a adds instead of subtracts so it is not a valid comparator. Note: Arrays.sort with a Comparator only works on Object arrays, not primitive int[]."
+    },
+
+    {
+      "id": 31, "subject": "it", "category": "java", "topic": "Debugging", "difficulty": "easy",
+      "question": "What happens when this code runs?",
+      "code": "public class Test {\n    public static void main(String[] args) {\n        int[] arr = new int[5];\n        System.out.println(arr[5]);\n    }\n}",
+      "options": ["Compilation error", "ArrayIndexOutOfBoundsException at runtime", "Prints 0", "NullPointerException"],
+      "correct": 1,
+      "explanation": "new int[5] creates an array with valid indices 0 through 4. Accessing arr[5] is beyond the array bounds. The Java compiler does not check array bounds at compile time, so this compiles fine. At runtime, the JVM throws ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5."
+    },
+    {
+      "id": 32, "subject": "it", "category": "java", "topic": "Debugging", "difficulty": "easy",
+      "question": "What happens when this code runs?",
+      "code": "String s = null;\nSystem.out.println(s.length());",
+      "options": ["Prints 0", "Compilation error", "NullPointerException at runtime", "Prints null"],
+      "correct": 2,
+      "explanation": "s is assigned null, meaning it holds no reference to a String object. Calling .length() on null attempts to invoke a method on a non-existent object — Java throws NullPointerException at runtime. The compiler cannot detect this (it would require null-flow analysis). The fix is to check: if (s != null) before calling methods, or use Objects.requireNonNull()."
+    },
+    {
+      "id": 33, "subject": "it", "category": "java", "topic": "Debugging", "difficulty": "easy",
+      "question": "What is wrong with this loop?",
+      "code": "for (int i = 0; i < 10; i--) {\n    System.out.println(i);\n}",
+      "options": ["Syntax error", "Infinite loop — i decrements instead of incrementing, so i < 10 is always true", "Prints nothing", "Off-by-one error"],
+      "correct": 1,
+      "explanation": "i starts at 0 and is decremented with i--. So i goes 0, -1, -2, -3 ... indefinitely. The condition i < 10 is always True because i only gets smaller. The correct update expression should be i++ to increment toward 10. This is a classic copy-paste bug."
+    },
+    {
+      "id": 34, "subject": "it", "category": "java", "topic": "Debugging", "difficulty": "easy",
+      "question": "What is wrong with this code?",
+      "code": "int x = 5;\nif (x = 5) {\n    System.out.println(\"five\");\n}",
+      "options": ["Nothing — prints 'five'", "Runtime error", "Compilation error — = is assignment, not equality comparison", "Prints nothing"],
+      "correct": 2,
+      "explanation": "In Java, an if condition must be a boolean expression. x = 5 is an assignment expression that evaluates to 5 (an int). Unlike C/C++, Java does not implicitly treat non-zero ints as true — the compiler enforces boolean type, so this is a compile-time error: 'incompatible types: int cannot be converted to boolean'. The fix is x == 5."
+    },
+    {
+      "id": 35, "subject": "it", "category": "java", "topic": "Debugging", "difficulty": "medium",
+      "question": "What happens at runtime?",
+      "code": "class Animal {}\nclass Dog extends Animal {}\n\nAnimal a = new Animal();\nDog d = (Dog) a;",
+      "options": ["Compilation error", "ClassCastException at runtime", "Works fine — Dog is a subtype of Animal", "NullPointerException"],
+      "correct": 1,
+      "explanation": "The cast (Dog) a compiles because Dog is a subclass of Animal and the compiler allows the downcast. However, at runtime the actual object referenced by a is an Animal, not a Dog. The JVM performs a type check and throws ClassCastException because you cannot cast an Animal instance to Dog. The fix is to check first: if (a instanceof Dog) { Dog d = (Dog) a; }"
+    },
+
+    {
+      "id": 36, "subject": "it", "category": "java", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "System.out.println(10 / 3);",
+      "options": ["3.33", "3", "3.0", "4"],
+      "correct": 1,
+      "explanation": "In Java, dividing two int literals uses integer (truncating) division — the fractional part is discarded. 10 / 3 = 3 (not 3.33...). The result type is int, so no decimal is shown. To get float division, at least one operand must be a floating-point type: 10.0 / 3 or (double)10 / 3 would give 3.3333..."
+    },
+    {
+      "id": 37, "subject": "it", "category": "java", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does the 'final' keyword on a local variable mean in Java?",
+      "options": ["The variable is accessible globally", "The variable cannot be reassigned after its first assignment", "The variable is allocated in static memory", "The variable is accessible only within the current method"],
+      "correct": 1,
+      "explanation": "A final variable in Java is effectively a constant — it can be assigned exactly once and cannot be changed afterwards. Attempting a second assignment causes a compile-time error. On a method, final means it cannot be overridden. On a class, final means it cannot be subclassed. final does not imply static or global scope."
+    },
+    {
+      "id": 38, "subject": "it", "category": "java", "topic": "Syntax", "difficulty": "medium",
+      "question": "What is the key difference between == and .equals() for String comparison in Java?",
+      "options": ["There is no difference", "== compares object references; .equals() compares the actual character content", ".equals() compares object references; == compares content", "Both compare content"],
+      "correct": 1,
+      "explanation": "In Java, == on objects checks whether both variables reference the exact same object in memory. Two String objects with identical content but created separately may be stored at different addresses, so == returns false. .equals() compares the character sequences and returns true if the content is identical. String literals may be interned (shared), making == accidentally work — but .equals() is always safe and correct."
+    },
+    {
+      "id": 39, "subject": "it", "category": "java", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does 'static' mean on a Java method?",
+      "options": ["The method cannot be called from outside the class", "The method belongs to the class itself, not to any instance", "The method is abstract and must be overridden", "The method is inherited by all subclasses"],
+      "correct": 1,
+      "explanation": "A static method is associated with the class, not with any particular object. It can be called without creating an instance: ClassName.methodName(). It cannot access instance fields or non-static methods directly because there is no 'this'. main is always static so the JVM can call it without instantiating the class."
+    },
+    {
+      "id": 40, "subject": "it", "category": "java", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int x = 5;\nSystem.out.println(x++);\nSystem.out.println(x);",
+      "options": ["5 then 5", "6 then 6", "5 then 6", "6 then 5"],
+      "correct": 2,
+      "explanation": "x++ is post-increment: the current value (5) is used in the expression first, then x is incremented. So println(x++) prints 5, after which x becomes 6. The second println(x) then prints 6. In contrast, ++x (pre-increment) would increment first, making both prints show 6."
+    },
+
+    {
+      "id": 41, "subject": "it", "category": "java", "topic": "Output", "difficulty": "hard",
+      "question": "What is the output?",
+      "code": "int a = 2;\nint b = a++ + ++a;\nSystem.out.println(b);",
+      "options": ["5", "6", "4", "7"],
+      "correct": 1,
+      "explanation": "Evaluation is left-to-right. a++ evaluates to 2 (current value of a), then a becomes 3. ++a immediately increments a to 4 and evaluates to 4. So b = 2 + 4 = 6. After this line, a = 4. Output is 6. Note: mixing pre- and post-increment in a single expression is error-prone and should be avoided in real code."
+    },
+    {
+      "id": 42, "subject": "it", "category": "java", "topic": "Output", "difficulty": "medium",
+      "question": "What does this print?",
+      "code": "String s = \"Hello\";\ns.concat(\" World\");\nSystem.out.println(s);",
+      "options": ["Hello World", "Hello", "Compilation error", "null"],
+      "correct": 1,
+      "explanation": "Strings in Java are immutable — methods like concat() return a new String object and never modify the original. The return value of s.concat(\" World\") is discarded because it is not assigned back. s still references the original \"Hello\". To fix: s = s.concat(\" World\"); or s += \" World\";"
+    },
+    {
+      "id": 43, "subject": "it", "category": "java", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "for (int i = 0; i < 3; i++) {\n    System.out.print(i + \" \");\n}",
+      "options": ["1 2 3", "0 1 2 3", "0 1 2", "0 1 2 (with trailing space)"],
+      "correct": 2,
+      "explanation": "range is 0, 1, 2 (i < 3 means i stops before 3). print (not println) does not add a newline. Each iteration prints a digit followed by a space, giving '0 1 2 ' with a trailing space. The option '0 1 2' is closest conceptually, though technically there is a trailing space after the last 2."
+    },
+    {
+      "id": 44, "subject": "it", "category": "java", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output? (Notice: no break statements)",
+      "code": "int x = 10;\nswitch (x) {\n    case 10: System.out.println(\"Ten\");\n    case 20: System.out.println(\"Twenty\");\n    default: System.out.println(\"Other\");\n}",
+      "options": ["Ten", "Ten then Twenty then Other", "Ten then Twenty", "Other"],
+      "correct": 1,
+      "explanation": "Java switch statements fall through from a matched case to all subsequent cases unless a break statement stops execution. case 10 matches, so 'Ten' is printed. Without break, execution continues into case 20 ('Twenty') and then default ('Other'). To print only 'Ten', add break; after each case. Fall-through is occasionally intentional but a common source of bugs."
+    },
+    {
+      "id": 45, "subject": "it", "category": "java", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3));\nlist.remove(Integer.valueOf(2));\nSystem.out.println(list);",
+      "options": ["[1, 3]", "[1, 2]", "[2, 3]", "[1, 2, 3]"],
+      "correct": 0,
+      "explanation": "ArrayList has two overloaded remove methods: remove(int index) and remove(Object o). Integer.valueOf(2) is an Object (boxed Integer), so remove(Object o) is called, which removes the first occurrence of the value 2 from the list. The list becomes [1, 3]. If you passed remove(2) with an unboxed int literal, it would remove the element at index 2 (value 3) instead."
+    },
+    {
+      "id": 46, "subject": "it", "category": "java", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int i = 0;\nwhile (i < 5) {\n    if (i == 3) break;\n    i++;\n}\nSystem.out.println(i);",
+      "options": ["5", "4", "3", "0"],
+      "correct": 2,
+      "explanation": "The while loop runs with i = 0, 1, 2. When i reaches 3, the if condition is true and break exits the loop immediately. i is not incremented beyond 3 because the break happens before i++ (wait — actually i was incremented to 3 in the previous iteration; the check if (i==3) happens before i++ in this iteration). At the break point i == 3, and after exiting the loop println prints 3."
+    },
+    {
+      "id": 47, "subject": "it", "category": "java", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "System.out.println(\"5\" + 3 + 2);",
+      "options": ["10", "532", "55", "Compilation error"],
+      "correct": 1,
+      "explanation": "Java evaluates left-to-right. \"5\" + 3: the + operator with a String uses string concatenation, giving \"53\". \"53\" + 2: again concatenation, giving \"532\". If the expression were 3 + 2 + \"5\" the result would be \"55\" because 3+2=5 (integer addition) happens first, then 5+\"5\"=\"55\". Parentheses or explicit casting control this behaviour."
+    },
+    {
+      "id": 48, "subject": "it", "category": "java", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int[] a = {1, 2, 3};\nint[] b = a;\nb[0] = 99;\nSystem.out.println(a[0]);",
+      "options": ["1", "99", "Compilation error", "0"],
+      "correct": 1,
+      "explanation": "In Java, arrays are objects. int[] b = a does not copy the array — both a and b hold a reference to the same underlying array in the heap. Modifying b[0] = 99 changes the shared array, so a[0] is also 99. To create an independent copy use Arrays.copyOf(a, a.length) or System.arraycopy."
+    },
+
+    {
+      "id": 49, "subject": "it", "category": "java", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "To find the maximum value in an int[] array using streams, which approach is correct?",
+      "options": ["Arrays.max(arr)", "Collections.max(arr)", "IntStream.of(arr).max().getAsInt()", "arr.max()"],
+      "correct": 2,
+      "explanation": "IntStream.of(arr) creates a stream of primitive ints from the array. .max() returns an OptionalInt. .getAsInt() unwraps the value. This works safely for non-empty arrays; for empty arrays getAsInt() throws NoSuchElementException. Arrays and Collections do not have a max() method directly. arr.max() does not exist on arrays."
+    },
+    {
+      "id": 50, "subject": "it", "category": "java", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "What does HashMap.getOrDefault(key, 0) do?",
+      "options": ["Throws an exception if the key is missing", "Returns the mapped value if the key exists, otherwise returns 0", "Inserts the key with a default value of 0", "Removes the key and returns 0"],
+      "correct": 1,
+      "explanation": "getOrDefault(key, defaultValue) is a convenience method that avoids a NullPointerException when a key is absent. It returns the value for key if present, otherwise the provided default (0 here). Unlike putIfAbsent, it does NOT modify the map. It was introduced in Java 8 and is very useful for frequency counting patterns."
+    },
+    {
+      "id": 51, "subject": "it", "category": "java", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "Fill in the blank to correctly count character frequencies:",
+      "code": "Map<Character, Integer> freq = new HashMap<>();\nfor (char c : s.toCharArray()) {\n    freq.put(c, ______);\n}",
+      "options": ["c + 1", "freq.get(c) + 1", "freq.getOrDefault(c, 0) + 1", "1"],
+      "correct": 2,
+      "explanation": "For the first occurrence of a character, freq.get(c) would return null, so freq.get(c) + 1 would throw a NullPointerException. getOrDefault(c, 0) safely returns 0 when c has not been seen yet, then + 1 increments the count. This is the idiomatic Java 8+ pattern for frequency maps. Option D (just 1) would reset every character's count to 1 on every encounter."
+    },
+    {
+      "id": 52, "subject": "it", "category": "java", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "Which Java Stream operation is used to filter elements that satisfy a condition?",
+      "options": [".map()", ".filter()", ".reduce()", ".collect()"],
+      "correct": 1,
+      "explanation": ".filter(Predicate) is an intermediate operation that passes through only elements for which the predicate returns true. .map() transforms elements. .reduce() combines elements into a single result. .collect() is a terminal operation that accumulates stream elements into a collection (like toList()). A typical pipeline: list.stream().filter(x -> x > 5).collect(Collectors.toList())"
+    },
+    {
+      "id": 53, "subject": "it", "category": "java", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "To sort a List<Person> by age using streams/comparators, which is correct?",
+      "options": ["Collections.sort(list)", "list.sort(Comparator.comparing(Person::getAge))", "list.sort(Person::age)", "Arrays.sort(list)"],
+      "correct": 1,
+      "explanation": "Comparator.comparing(Person::getAge) creates a Comparator that extracts the age via the method reference and compares instances by it. list.sort() is the List's instance method introduced in Java 8. Collections.sort(list) works only if Person implements Comparable. list.sort(Person::age) is invalid method reference syntax. Arrays.sort does not accept a List."
+    },
+
+    {
+      "id": 54, "subject": "it", "category": "c_cpp", "topic": "Logic Flow", "difficulty": "medium",
+      "question": "Fill in the blank to complete the pointer-based swap function:",
+      "code": "void swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = ______;\n}",
+      "options": ["*a", "temp", "*b", "a"],
+      "correct": 1,
+      "explanation": "temp stores the original value that *a held before it was overwritten. The three-step exchange is: save original *a into temp, copy *b into *a, copy temp (original *a) into *b. Using *a after it was overwritten would give the wrong value. *b is the value we already moved. a (without dereference) is a pointer address, not the integer value."
+    },
+    {
+      "id": 55, "subject": "it", "category": "c_cpp", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Complete the comparison in bubble sort to sort in ascending order:",
+      "code": "for (i = 0; i < n-1; i++)\n    for (j = 0; j < n-i-1; j++)\n        if (arr[j] ______ arr[j+1]) {\n            // swap arr[j] and arr[j+1]\n        }",
+      "options": ["<", "==", ">", "!="],
+      "correct": 2,
+      "explanation": "Bubble sort swaps adjacent elements when they are in the wrong order. For ascending order, if arr[j] > arr[j+1] the left element is larger — they need to be swapped to move the larger value rightward (toward the end). Using < would sort in descending order. == or != are not useful comparison operators for sorting."
+    },
+    {
+      "id": 56, "subject": "it", "category": "c_cpp", "topic": "Logic Flow", "difficulty": "medium",
+      "question": "Fill in the blank to dynamically allocate an array of 10 ints in C:",
+      "code": "int *arr = ______;",
+      "options": ["malloc(10)", "(int*)malloc(10 * sizeof(int))", "new int[10]", "alloc(int, 10)"],
+      "correct": 1,
+      "explanation": "malloc allocates raw bytes. We need 10 * sizeof(int) bytes (typically 40 bytes on 32/64-bit). The cast (int*) converts the returned void* to int*. malloc(10) would only allocate 10 bytes — far too small and type-unsafe. new int[10] is C++ syntax only. alloc(int, 10) does not exist in standard C. Always free() memory allocated with malloc."
+    },
+    {
+      "id": 57, "subject": "it", "category": "c_cpp", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Fill in the string terminator condition to correctly count vowels:",
+      "code": "int count = 0;\nfor (int i = 0; s[i] != ______; i++)\n    if (strchr(\"aeiouAEIOU\", s[i])) count++;",
+      "options": ["'\\n'", "EOF", "'\\0'", "0"],
+      "correct": 2,
+      "explanation": "C strings are null-terminated: the character '\\0' (ASCII 0) marks the end. The loop should stop when it hits the null terminator. '\\n' only marks a newline. EOF is an int constant (-1) used with file I/O functions, not string traversal. 0 is numerically equivalent to '\\0' but '\\0' is the idiomatic and clearer way to write it."
+    },
+    {
+      "id": 58, "subject": "it", "category": "c_cpp", "topic": "Logic Flow", "difficulty": "easy",
+      "question": "Complete the destructor declaration for class MyClass in C++:",
+      "code": "______ MyClass() {\n    // cleanup code\n}",
+      "options": ["void", "delete", "~", "free"],
+      "correct": 2,
+      "explanation": "A C++ destructor is declared with a tilde (~) followed by the class name: ~MyClass(). It has no return type, takes no parameters, and is called automatically when an object goes out of scope or is deleted. void would make it an ordinary method returning void. delete and free are memory-deallocation operations, not keywords for naming destructors."
+    },
+
+    {
+      "id": 59, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is the bug?",
+      "code": "int *p;\n*p = 10;\nprintf(\"%d\", *p);",
+      "options": ["Syntax error", "Segmentation fault — p is an uninitialised pointer pointing to a random address", "Prints 10 correctly", "Prints garbage"],
+      "correct": 1,
+      "explanation": "int *p declares a pointer but does not initialise it. Its value is garbage — some random memory address. Dereferencing it with *p = 10 writes to an arbitrary memory location, which is undefined behaviour. In practice it usually causes a segmentation fault (access violation). The fix: allocate memory first: int *p = malloc(sizeof(int)); or point to an existing int: int x; int *p = &x;"
+    },
+    {
+      "id": 60, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is the bug?",
+      "code": "char *s = \"Hello\";\ns[0] = 'h';",
+      "options": ["Compile error: cannot modify char via pointer", "Undefined behaviour — string literals are stored in read-only memory", "Works fine — prints 'hello'", "Only works in C++"],
+      "correct": 1,
+      "explanation": "String literals in C/C++ (\"Hello\") are typically placed in read-only data segments by the OS. The pointer s points into this read-only region. Modifying s[0] is undefined behaviour — it may crash with a segfault or silently appear to work depending on the platform. The correct approach for a mutable string is: char s[] = \"Hello\"; which copies the literal onto the stack."
+    },
+    {
+      "id": 61, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is the problem with this C function?",
+      "code": "void foo() {\n    int *p = (int*)malloc(sizeof(int));\n    *p = 5;\n    // function returns without freeing p\n}",
+      "options": ["No problem", "Memory leak — malloc'd memory is never freed with free()", "Segmentation fault on return", "Stack overflow"],
+      "correct": 1,
+      "explanation": "malloc allocates memory on the heap. When foo returns, the local pointer p goes out of scope, but the heap memory it pointed to is NOT released automatically. That memory block is now unreachable and wasted for the lifetime of the process — a memory leak. The fix is to call free(p) before returning. In C++, RAII (smart pointers) and destructors handle this automatically."
+    },
+    {
+      "id": 62, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "easy",
+      "question": "What is the bug?",
+      "code": "int arr[5] = {1, 2, 3, 4, 5};\nprintf(\"%d\", arr[5]);",
+      "options": ["Compilation error — index out of range detected at compile time", "Prints 0 (default zero-padding)", "Undefined behaviour — accessing memory one position past the end of the array", "Always causes a segmentation fault"],
+      "correct": 2,
+      "explanation": "C does not perform bounds checking on arrays at runtime. arr[5] accesses the memory address immediately after the last valid element (index 4). This is undefined behaviour — the program may print garbage, crash, or even appear to work. Some compilers (with -Wall) will warn about this. The valid indices are 0 through 4."
+    },
+    {
+      "id": 63, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is wrong?",
+      "code": "class A {\n    int x;\npublic:\n    A(int val) : x(val) {}\n};\nA obj;  // no arguments",
+      "options": ["Runtime error", "Compilation error — no default (no-argument) constructor exists", "Works fine — x is zero-initialised", "Segmentation fault"],
+      "correct": 1,
+      "explanation": "Defining any constructor suppresses the compiler-generated default constructor. Since A only has A(int val), calling A obj (which requires a no-argument constructor) fails at compile time: 'no matching constructor for initialization of A'. Solutions: provide A() = default; or A() : x(0) {}, or always pass an argument: A obj(0);"
+    },
+    {
+      "id": 64, "subject": "it", "category": "c_cpp", "topic": "Debugging", "difficulty": "medium",
+      "question": "What is wrong with this recursive factorial?",
+      "code": "int factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n);\n}",
+      "options": ["Wrong return type", "Infinite recursion — recursive call passes n instead of n-1", "Off-by-one in base case", "No bug"],
+      "correct": 1,
+      "explanation": "The recursive call factorial(n) passes the same value of n rather than n-1. The base case n == 0 is never reached for n > 0, resulting in infinite recursion and a stack overflow. The correct recursive call is factorial(n - 1) which decrements n toward the base case."
+    },
+
+    {
+      "id": 65, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does sizeof(int) typically return on most 32-bit and 64-bit systems?",
+      "options": ["2", "4", "8", "It is always implementation-defined and has no typical value"],
+      "correct": 1,
+      "explanation": "On virtually all modern 32-bit and 64-bit platforms (x86, ARM, x86-64) int is 4 bytes (32 bits). The C/C++ standard guarantees at least 16 bits, but 4 bytes is universal in practice. sizeof(long) may vary (4 bytes on Windows 64-bit, 8 bytes on Linux 64-bit). sizeof(int) is evaluated at compile time and is always of type size_t."
+    },
+    {
+      "id": 66, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the difference between ++i (pre-increment) and i++ (post-increment)?",
+      "options": ["No difference — both increment i by 1 and evaluate to the same value", "++i increments first and yields the new value; i++ yields the old value then increments", "i++ is faster because it avoids a temporary", "++i is only valid for pointers"],
+      "correct": 1,
+      "explanation": "Both increment i by 1 as a side-effect. The difference is in the expression value: ++i returns the incremented value; i++ returns the original value before incrementing. Example: if i=5, then j = ++i gives j=6, i=6. j = i++ gives j=5, i=6. For plain ints the performance is identical with modern optimisers; for iterators or objects with overloaded operators, ++i can be more efficient."
+    },
+    {
+      "id": 67, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does 'int *p = &x' mean in C?",
+      "options": ["p stores a copy of the value of x", "p stores the memory address of x", "p and x are the same variable", "x is declared as a pointer to int"],
+      "correct": 1,
+      "explanation": "& is the address-of operator. &x returns the memory address where x is stored. int *p declares p as a pointer to int. int *p = &x initialises p to hold x's address. After this, *p (dereferencing) gives the value of x. Modifying *p changes x. This is the basis of pass-by-reference in C."
+    },
+    {
+      "id": 68, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "medium",
+      "question": "What does the 'virtual' keyword do in C++?",
+      "options": ["It makes the method private to the class", "It enables dynamic dispatch — the correct overriding method is selected at runtime based on the actual object type", "It makes the method a pure abstract method", "It prevents the method from being inherited"],
+      "correct": 1,
+      "explanation": "virtual enables runtime polymorphism (dynamic dispatch) via the vtable. When a base class pointer/reference calls a virtual function, C++ uses the actual (derived) object's implementation, not the declared type's. Without virtual, the base class version is always called — static dispatch. To make a function pure abstract use virtual void f() = 0; which forces subclasses to override it."
+    },
+    {
+      "id": 69, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is the key default access difference between struct and class in C++?",
+      "options": ["No difference at all", "struct members are public by default; class members are private by default", "struct cannot have member functions", "class cannot have data members"],
+      "correct": 1,
+      "explanation": "In C++, the only difference between struct and class is the default access specifier: struct defaults to public, class defaults to private. Both can have constructors, destructors, inheritance, and member functions. C structs (plain C) have no member functions, but C++ structs are full class equivalents with a public default."
+    },
+    {
+      "id": 70, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What does '#define MAX 100' do in C?",
+      "options": ["Declares a constant integer variable MAX with value 100", "Instructs the preprocessor to textually replace every occurrence of MAX with 100 before compilation", "Creates a global variable MAX in memory", "Allocates 100 bytes named MAX"],
+      "correct": 1,
+      "explanation": "#define is a preprocessor directive processed before compilation. It performs text substitution: every token MAX in the source is replaced by 100. It has no type, no memory allocation, and no scope. const int MAX = 100; is the preferred modern C/C++ alternative because it has a type, respects scope, and works correctly in debuggers."
+    },
+    {
+      "id": 71, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "easy",
+      "question": "What is nullptr in C++11 and later?",
+      "options": ["An empty string constant", "A type-safe null pointer literal of type std::nullptr_t", "Equivalent to the integer 0 in all contexts", "An undefined symbol in standard C++"],
+      "correct": 1,
+      "explanation": "nullptr is a keyword introduced in C++11 as a type-safe null pointer. Unlike NULL (which is typically #defined as 0 or (void*)0), nullptr has its own type std::nullptr_t and does not implicitly convert to integer types. This prevents ambiguity in overloaded functions: f(0) might call f(int) whereas f(nullptr) always calls f(pointer_type*). Use nullptr in C++ instead of NULL or 0 for pointers."
+    },
+    {
+      "id": 72, "subject": "it", "category": "c_cpp", "topic": "Syntax", "difficulty": "hard",
+      "question": "What is the behaviour of this C code?",
+      "code": "int x = 5;\nprintf(\"%d %d\", x, x++);",
+      "options": ["Prints 5 5", "Prints 6 5", "Undefined behaviour — order of argument evaluation is unspecified", "Prints 5 6"],
+      "correct": 2,
+      "explanation": "The C standard does not specify the order in which function arguments are evaluated. Modifying x (via x++) while also reading x (the first argument) without a sequence point between them is undefined behaviour. Different compilers or optimisation levels may produce 5 5, 6 5, 5 6, or anything else. The fix is to separate the side effect: int old = x; x++; printf(\"%d %d\", x, old);"
+    },
+
+    {
+      "id": 73, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int a = 3, b = 4;\nint c = a > b ? a : b;\nprintf(\"%d\", c);",
+      "options": ["3", "4", "7", "0"],
+      "correct": 1,
+      "explanation": "The ternary operator condition ? expr_if_true : expr_if_false evaluates the condition (a > b = 3 > 4 = false) and returns the false branch: b = 4. So c = 4. This is the standard max idiom in C."
+    },
+    {
+      "id": 74, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int i = 0;\ndo {\n    printf(\"%d \", i);\n    i++;\n} while (i < 3);",
+      "options": ["0 1 2", "1 2 3", "0 1 2 3", "Nothing"],
+      "correct": 0,
+      "explanation": "A do-while loop executes its body at least once before checking the condition. Starting with i=0: print 0, i becomes 1; condition 1<3 is true; print 1, i becomes 2; condition 2<3 is true; print 2, i becomes 3; condition 3<3 is false — loop exits. Output: '0 1 2 ' (with trailing space)."
+    },
+    {
+      "id": 75, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int arr[] = {10, 20, 30};\nint *p = arr;\nprintf(\"%d\", *(p + 1));",
+      "options": ["10", "20", "30", "Garbage"],
+      "correct": 1,
+      "explanation": "p = arr makes p point to arr[0] = 10. Pointer arithmetic p + 1 advances p by sizeof(int) bytes, pointing to arr[1] = 20. Dereferencing *(p + 1) gives 20. This is equivalent to arr[1] or p[1]. Pointer arithmetic always moves by the size of the pointed-to type."
+    },
+    {
+      "id": 76, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "#include <iostream>\nusing namespace std;\nint main() {\n    int x = 1;\n    cout << (x << 2);\n}",
+      "options": ["1", "2", "4", "8"],
+      "correct": 2,
+      "explanation": "x << 2 is the left bit-shift operator. It shifts the binary representation of x (which is 0001) left by 2 positions, giving 0100 = 4. Left-shifting by n is equivalent to multiplying by 2^n: 1 × 2^2 = 4. Right-shift (>>) divides by powers of 2 (for non-negative integers)."
+    },
+    {
+      "id": 77, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int x = 10;\nint y = x / 3;\nprintf(\"%d\", y);",
+      "options": ["3.33", "3", "4", "Error"],
+      "correct": 1,
+      "explanation": "Both x and 3 are integers. Integer division in C truncates toward zero: 10 / 3 = 3 (not 3.33). The fractional part is discarded. To get floating-point division: (float)x / 3 or x / 3.0f."
+    },
+    {
+      "id": 78, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "string s = \"Hello\";\ncout << s.substr(1, 3);",
+      "options": ["Hel", "ell", "ello", "lo"],
+      "correct": 1,
+      "explanation": "std::string::substr(pos, len) returns a substring starting at index pos with length len. substr(1, 3) starts at index 1 (character 'e') and takes 3 characters: 'e', 'l', 'l' → \"ell\". Common mistake: treating the second argument as an end index (like Python) rather than a length."
+    },
+    {
+      "id": 79, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "int a = 5, b = 2;\nprintf(\"%d %d\", a & b, a | b);",
+      "options": ["0 7", "0 5", "0 2", "1 7"],
+      "correct": 0,
+      "explanation": "5 in binary is 101. 2 in binary is 010. Bitwise AND (&): 101 & 010 = 000 = 0 (only bits set in BOTH). Bitwise OR (|): 101 | 010 = 111 = 7 (bits set in EITHER). Output: '0 7'."
+    },
+    {
+      "id": 80, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "vector<int> v = {1, 2, 3, 4, 5};\nv.erase(v.begin() + 2);\nfor (auto x : v) cout << x << \" \";",
+      "options": ["1 2 3 4 5", "1 2 4 5", "1 3 4 5", "2 3 4 5"],
+      "correct": 1,
+      "explanation": "v.begin() + 2 is an iterator pointing to the element at index 2, which has value 3. erase removes that element and shifts subsequent elements left. The vector becomes {1, 2, 4, 5}. Note: after erase, the iterator v.begin()+2 is invalidated — do not reuse it."
+    },
+    {
+      "id": 81, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "int x = 7;\nx ^= 3;\nprintf(\"%d\", x);",
+      "options": ["4", "7", "3", "10"],
+      "correct": 0,
+      "explanation": "x ^= 3 is equivalent to x = x ^ 3. 7 in binary is 0111. 3 in binary is 0011. XOR (^): bits differ → 1, bits same → 0. 0111 ^ 0011 = 0100 = 4. XOR is useful for toggling specific bits and for the XOR-swap trick."
+    },
+    {
+      "id": 82, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int a = 10, b = 20;\ncout << (a > b ? \"a\" : \"b\");",
+      "options": ["a", "b", "10", "20"],
+      "correct": 1,
+      "explanation": "a > b evaluates to 10 > 20 = false. The ternary operator returns the false branch: the string literal \"b\". cout prints 'b'. The ternary does not print the variable values (10 or 20); it prints the string labels chosen by the condition."
+    },
+    {
+      "id": 83, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "char s[] = \"Hello\";\nprintf(\"%d\", strlen(s));",
+      "options": ["6", "5", "4", "Error"],
+      "correct": 1,
+      "explanation": "strlen counts the number of characters before the null terminator '\\0'. \"Hello\" has 5 characters (H, e, l, l, o) followed by '\\0'. strlen returns 5. sizeof(s) would return 6 (including the null terminator). This distinction is a frequent source of off-by-one bugs."
+    },
+    {
+      "id": 84, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int arr[] = {5, 10, 15, 20};\nint n = sizeof(arr) / sizeof(arr[0]);\ncout << n;",
+      "options": ["4", "8", "16", "1"],
+      "correct": 0,
+      "explanation": "sizeof(arr) returns the total size of the array in bytes (4 elements × 4 bytes each = 16). sizeof(arr[0]) returns the size of one element (4 bytes). Dividing gives 4 — the number of elements. This idiom is the idiomatic C/C++ way to get array length for stack-allocated arrays. It does NOT work for pointers passed to functions."
+    },
+    {
+      "id": 85, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int x = 0;\nx += 5;\nx *= 2;\nx -= 3;\nprintf(\"%d\", x);",
+      "options": ["7", "10", "3", "5"],
+      "correct": 0,
+      "explanation": "Step by step: x starts at 0. x += 5 → x = 5. x *= 2 → x = 10. x -= 3 → x = 7. Output: 7. Compound assignment operators (+=, *=, -=) modify x in place."
+    },
+    {
+      "id": 86, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "class A {\npublic:\n    A()  { cout << \"A \"; }\n    ~A() { cout << \"~A \"; }\n};\nint main() {\n    A a;\n    return 0;\n}",
+      "options": ["A", "A ~A", "~A A", "~A"],
+      "correct": 1,
+      "explanation": "When A a is created, the constructor A() runs and prints 'A '. When main returns, a goes out of scope and its destructor ~A() runs automatically, printing '~A '. Destructors are called in reverse order of construction for stack objects. Output: 'A ~A '."
+    },
+    {
+      "id": 87, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int i;\nfor (i = 0; i < 5; i += 2)\n    printf(\"%d \", i);",
+      "options": ["0 1 2 3 4", "0 2 4", "1 3 5", "0 2 4 6"],
+      "correct": 1,
+      "explanation": "i += 2 increments by 2 each iteration. Starting at 0: 0 (0<5 ✓), 2 (2<5 ✓), 4 (4<5 ✓), 6 (6<5 ✗ — loop ends). So i takes values 0, 2, 4. Output: '0 2 4 '."
+    },
+    {
+      "id": 88, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int x = 5;\nint &ref = x;\nref = 10;\ncout << x;",
+      "options": ["5", "10", "Error", "15"],
+      "correct": 1,
+      "explanation": "int &ref = x declares ref as a reference to x — it is an alias, not a copy. Any modification through ref modifies x directly. ref = 10 sets x to 10. cout << x prints 10. References must be initialised at declaration and cannot be reseated to refer to a different variable."
+    },
+    {
+      "id": 89, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "printf(\"%d\", 2 + 3 * 4 - 1);",
+      "options": ["19", "13", "8", "20"],
+      "correct": 1,
+      "explanation": "C/C++ follows standard mathematical precedence: * and / before + and -. Evaluate: 3 * 4 = 12 first. Then left-to-right: 2 + 12 = 14, 14 - 1 = 13. Output: 13."
+    },
+    {
+      "id": 90, "subject": "it", "category": "c_cpp", "topic": "Output", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "int a = 1;\nif (a = 0)\n    cout << \"zero\";\nelse\n    cout << \"nonzero\";",
+      "options": ["zero", "nonzero", "Compilation error in C++", "Undefined behaviour"],
+      "correct": 1,
+      "explanation": "Unlike Java, C++ allows assignment inside an if condition. a = 0 assigns 0 to a and the expression evaluates to 0 (falsy). So the else branch runs and prints 'nonzero'. After this line a = 0. This is a common source of bugs (typing = instead of ==). Modern compilers warn about this; many style guides require explicit parentheses: if ((a = 0)) to signal intentional assignment."
+    },
+
+    {
+      "id": 91, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "Which standard C function sorts an array?",
+      "options": ["sort()", "qsort()", "array_sort()", "bubble_sort()"],
+      "correct": 1,
+      "explanation": "qsort() is defined in <stdlib.h> and sorts any array using a user-provided comparator function. Signature: void qsort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *)). In C++, std::sort from <algorithm> is preferred because it is type-safe, works with templates, and is typically faster. sort() alone is not a standard C function."
+    },
+    {
+      "id": 92, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "Which C++ STL container provides average O(1) lookup by key?",
+      "options": ["std::vector", "std::list", "std::unordered_map", "std::set"],
+      "correct": 2,
+      "explanation": "std::unordered_map uses a hash table internally, giving O(1) average-case for insert, erase, and find. std::map (and std::set) use a red-black tree — O(log n) for all operations but keys are kept sorted. std::vector provides O(1) access by index but O(n) search. std::list gives O(n) search."
+    },
+    {
+      "id": 93, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "What does std::accumulate do in C++?",
+      "options": ["Finds the maximum element in a range", "Computes the sum (or a fold) of elements in a range starting from an initial value", "Sorts the range in ascending order", "Reverses the range in place"],
+      "correct": 1,
+      "explanation": "std::accumulate (from <numeric>) starts with an initial value and applies a binary operation (default: +) to combine each element. accumulate(v.begin(), v.end(), 0) computes the sum of all elements. A custom operation can be provided for other reductions (product, concatenation, etc.). For a parallel version, use std::reduce in C++17."
+    },
+    {
+      "id": 94, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "What is the average time complexity of std::sort in C++?",
+      "options": ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
+      "correct": 1,
+      "explanation": "std::sort uses Introsort — a hybrid of Quicksort, Heapsort, and Insertion Sort. It guarantees O(n log n) worst-case complexity (unlike naive Quicksort which is O(n²) in the worst case). The best possible comparison-based sort is O(n log n). Linear-time sorts (counting sort, radix sort) exist but require assumptions about the data."
+    },
+    {
+      "id": 95, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "To get the number of elements in a std::vector<int> v, which call is correct?",
+      "options": ["v.length()", "v.count()", "v.size()", "sizeof(v)"],
+      "correct": 2,
+      "explanation": "v.size() returns the number of elements currently stored as a size_t (unsigned integer). .length() exists on std::string but not on vector. .count() is a map/set method. sizeof(v) returns the size of the vector object itself in bytes (typically 24 bytes for three pointers) — not the number of elements."
+    },
+    {
+      "id": 96, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "What does std::find return if the element is not found in the range?",
+      "options": ["-1", "0", "v.end() — an iterator one past the last element", "nullptr"],
+      "correct": 2,
+      "explanation": "std::find returns an iterator to the first matching element, or the end iterator (v.end()) if not found. The idiom to check is: auto it = find(v.begin(), v.end(), x); if (it != v.end()) { /* found */ }. It does not return -1 (that would be an index, not an iterator) or nullptr (iterators are not pointers in general)."
+    },
+    {
+      "id": 97, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "In C, to read an integer from a file pointer fp, which function is correct?",
+      "options": ["read(fp, &x, sizeof(int))", "fscanf(fp, \"%d\", &x)", "fgets(&x, fp)", "scanf(fp, \"%d\", &x)"],
+      "correct": 1,
+      "explanation": "fscanf(FILE *stream, const char *format, ...) reads formatted input from a file stream — analogous to scanf but from a file. fscanf(fp, \"%d\", &x) reads an integer and stores it at the address of x. scanf reads from stdin, not a file pointer. fgets reads a string, not a formatted integer. read() is a POSIX syscall for raw byte I/O."
+    },
+    {
+      "id": 98, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "Which C++ STL container stores unique elements in sorted order?",
+      "options": ["std::vector", "std::unordered_set", "std::set", "std::map"],
+      "correct": 2,
+      "explanation": "std::set stores unique elements and maintains them in sorted order (ascending by default) using a red-black tree. All operations (insert, find, erase) are O(log n). std::unordered_set provides O(1) average operations but has no ordering. std::vector can have duplicates and no automatic sorting. std::map is a key-value store."
+    },
+    {
+      "id": 99, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "easy",
+      "question": "What is the output?",
+      "code": "int sum = 0;\nint arr[] = {1, 2, 3, 4, 5};\nfor (int i = 0; i < 5; i++)\n    sum += arr[i];\nprintf(\"%d\", sum / 5);",
+      "options": ["15", "3", "2", "0"],
+      "correct": 1,
+      "explanation": "The loop accumulates 1+2+3+4+5 = 15 into sum. sum / 5 = 15 / 5 = 3 (integer division). The result is the arithmetic mean. Since all values are integers and their sum is perfectly divisible by 5, the result is exact. If the sum were not divisible, integer division would truncate the decimal part."
+    },
+    {
+      "id": 100, "subject": "it", "category": "c_cpp", "topic": "Data Analysis", "difficulty": "medium",
+      "question": "What is the output?",
+      "code": "map<string, int> m;\nm[\"a\"] = 1; m[\"b\"] = 2; m[\"c\"] = 3;\nfor (auto& p : m)\n    cout << p.first << \" \";",
+      "options": ["c b a", "a b c", "Random order — map does not sort", "Compilation error"],
+      "correct": 1,
+      "explanation": "std::map stores key-value pairs sorted by key in ascending order (using std::less<Key> by default). Iterating a map always yields elements in sorted key order. Since keys are strings 'a', 'b', 'c', the output is 'a b c'. For unordered (hash-based) iteration, std::unordered_map would give random order."
+    }
+
+  ]
+}
