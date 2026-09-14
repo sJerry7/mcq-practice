@@ -631,7 +631,9 @@ const App = {
 
   jumpTo(idx) {
     this.state.current = idx;
-    this.closeMap();
+    // On mobile the map is a full-screen overlay — close after navigating
+    // On desktop it's a permanent panel — keep it open
+    if (window.innerWidth <= 768) this.closeMap();
     this.renderQuestion();
   },
 
